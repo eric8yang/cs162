@@ -4,6 +4,7 @@ import json
 import random
 import logging
 import os
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -30,7 +31,10 @@ def evaluate_standard(preds, labels, scoring_method):
     # and F1 score for the predictions and gold labels.
     # Please also make your sci-kit learn scores are computed
     # using `scoring_method` for the `average` argument.
-    raise NotImplementedError("Please finish the TODO!")
+    acc = accuracy_score(labels, preds)
+    prec = precision_score(labels, preds, average=scoring_method)
+    recall = recall_score(labels, preds, average=scoring_method)
+    f1 = f1_score(labels, preds, average=scoring_method)
     # End of TODO
     ########################################################
 
@@ -46,7 +50,16 @@ def pairwise_accuracy(guids, preds, labels):
     # statement coming from the same complementary
     # pair is identical. You can simply pair the these
     # predictions and labels w.r.t the `guid`. 
-    raise NotImplementedError("Please finish the TODO!")
+    total_pairs = int(len(guids) / 2)
+    correct = [0] * total_pairs
+    for i in range(len(guids)):
+        correct[guids[i]] += 1 if preds[i] == labels[i] else 0
+    
+    correct_pairs = 0
+    for i in range(len(correct)):
+        correct_pairs += 1 if correct[i] == 2 else 0
+    
+    acc = correct_pairs/total_pairs
     # End of TODO
     ########################################################
      

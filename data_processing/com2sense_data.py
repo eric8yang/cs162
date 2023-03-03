@@ -61,7 +61,37 @@ class Com2SenseDataProcessor(DataProcessor):
         # Use the same guid for statements from the same complementary pair.
         # 6. Make sure to handle if data do not have labels field.
         # This is useful for loading test data
-        raise NotImplementedError("Please finish the TODO!")
+        file = data_dir + '/' + split + '.json'
+        f = open(file,)
+        data = json.load(f)
+        for i, datum in enumerate(data):
+            label_1 = None
+            if split != 'test':
+                label_1 = 1 if datum['label_1'] else 0
+
+            label_2 = None
+            if split != 'test':
+                label_2 = 1 if datum['label_2'] else 0
+
+            example_1 = Coms2SenseSingleSentenceExample(
+                guid = str(i),
+                text = datum['sent_1'],
+                label = label_1 if split != 'test' else None,
+                domain = datum['domain'],
+                scenario = datum['scenario'],
+                numeracy = datum['numeracy']
+            )
+
+            example_2 = Coms2SenseSingleSentenceExample(
+                guid = str(i),
+                text = datum['sent_2'],
+                label = label_2 if split != 'test' else None,
+                domain = datum['domain'],
+                scenario = datum['scenario'],
+                numeracy = datum['numeracy']
+            )
+            examples.append(example_1)
+            examples.append(example_2)
         # End of TODO.
         ##################################################
 
